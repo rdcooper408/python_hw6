@@ -1,0 +1,94 @@
+########## pexpect homework ##########
+Homework 1
+
+#import pexpect
+import pexpect
+
+In [36]: newprimates = open("primates2.nex", "w")
+
+In [37]: oldprimates = open("primates.nex").read() #reads entire contents of primates.nex as a string
+
+In [38]: corrected = oldprimates.replace("mcmc", "mcmcp")
+
+In [39]: corrected.find('mcmcp')
+Out[39]: 11344
+
+In [40]: newprimates.write(corrected)
+
+In [41]: newprimates.close()
+
+#### Homework 2 ###########
+
+#import pexpect
+import pexpect
+
+#spawn an interactive mrbayes process
+child = pexpect.spawn("mb -i primates2.nex") #-i tells mrbayes to run in interactive mode
+
+#send the command "execute primates2.nex" to mrbayes
+child.sendline("execute primates2.nex")
+
+#send the sumt command to mrbayes
+child.sendline("sumt")
+
+#check to see that the mrbayes command prompt is returned
+child.expect("MrBayes >")
+
+#print everything before the mrbayes prompt
+print child.before
+
+#send the sump command
+child.sendline("sump")
+
+#quit mrbayes
+child.sendline("quit")
+
+
+######## Homework 3 #####################
+
+#! /usr/bin/python
+
+from __future__ import division
+
+import pexpect, glob
+
+
+
+def function(nexus, numgen = 1100):
+    kid = pexpect.spawn("mb -i %s" %(nexus))   #kid could be anything/word. Same as child below
+    #%s refers to a string- file names apply; %d refers to the digit #
+    kid.sendline("set nowarn = yes")
+    kid.sendline("mcmcp ngen = %d" %(numgen))
+    kid.sendline("mcmc")
+    kid.sendline("no")
+    kid.sendline("quit")
+
+def functionB(nexusb):
+    child = pexpect.spawn("mb -i %s" %(nexusb))
+    child.sendline("execute %s" %(nexusb))
+    child.sendline("sumt")
+    child.sendline("sump")
+    child.sendline("quit")
+
+
+allfiles =glob.glob('*')
+tfiles =glob.glob('*.t')
+
+print("there are " + str(len(allfiles)) + "total files in the current directory and " + str(len(tfiles)) + " files that end in '.t'")
+#print("there are " + %d + "total files in the current directory and " + %d + " files that end in '.t'")
+#followed by %(len(all files), len(tfiles))
+
+
+function("primates2.nex")
+functionB("primates2.nex")
+
+allfiles2 =glob.glob('*')
+tfiles2 =glob.glob('*.t')
+
+print("there are " + str(len(allfiles2)) + "total files in the current directory and " + str(len(tfiles2)) + " files that end in '.t'")
+print ("these files end in '.t': " + str(tfiles2))
+
+
+
+
+
